@@ -17,9 +17,17 @@
 /* #region Header CSS */
 .header {
     flex: 0 0 75px;
+    display: flex;
+    align-items: center;
     padding: 5px 10px;
     margin: 5px 2px;
     background-color: #2C313C;
+}
+
+.header .logo {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
 }
 
 .header input {
@@ -36,6 +44,22 @@ input:focus {
     border: 2px solid white;
 }
 
+.header .message {
+    display: none;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    margin-left: 5px;
+    font-weight: 500;
+    animation: fadeInOut 1s;
+}
+
+.header .message img {
+    height: 30px;
+    width: 30px;
+    margin-right: 5px;
+}
+
 /* #endregion Header CSS End */
 
 
@@ -46,6 +70,14 @@ input:focus {
     padding-left: 20px;
     display: flex;
     background-color: #282C34;
+}
+
+.delete-btn {
+    display: none;
+    height: 20px;
+    width: 20px;
+    align-self: center;
+    cursor: pointer;
 }
 
 .cirlce-container {
@@ -71,13 +103,16 @@ input:focus {
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
+    display: flex;
 }
 
 .tabs:hover {
     overflow-x: auto;
 }
 
-.tabs button {
+.tabs div {
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
     border: none;
     background-color: #282C34;
@@ -87,20 +122,18 @@ input:focus {
     letter-spacing: 1px;
     font-size: 18px;
     cursor: pointer;
+    position: relative;
 }
 
-.tabs button:first-of-type {
+.tabs div:first-of-type {
     border-left: 1px solid black;
 }
 
-.tabs button:hover {
-    /* background-color: #21252B; */
-    /* background-color: #2C313A66; */
+.tabs div:hover {
     background-color: #2C313A;
-    border-bottom: 1px solid white;
 }
 
-.tabs button:focus {
+.tabs div:focus {
     border-bottom: 2px solid white;
 }
 
@@ -150,3 +183,98 @@ input:focus {
 }
 
 /* #endregion Utility css end */
+
+
+/* #region Modal CSS */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 250px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.modal-content {
+    background-color: #2C313A;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+}
+
+.modal-content h2 {
+    margin-top: 25px;
+    text-align: center;
+    color: white;
+}
+
+.modal-btns {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.modal-btns button {
+    background-color: #fff;
+    border: none;
+    color: #282C34;
+    font-weight: bold;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-right: 15px;
+    border-radius: 10px;
+}
+
+.modal-btns button:hover {
+    font-size: 24px;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* #endregion */
+
+
+/* #region Animations */
+@keyframes fadeInOut {
+
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* #endregion Animations */

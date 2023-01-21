@@ -5,25 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 
     <!-- External Links -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- -------------- -->
 
     <title>eNotes</title>
 </head>
 
 <body>
+    <!-- Modal Container -->
+    <div id="deleteModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+        <span class="close" onclick="closeModal();">&times;</span>
+        <h2>Are you sure you want to delete ?</h2>
+        <div class='modal-btns'>
+            <button onclick="deleteTab();">Delete</button>
+            <button onclick="closeModal();">Cancel</button>
+        </div>
+        </div>
+  
+  </div>
+
     <div class="container">
         <div class="header">
+            <img class="logo" src="assets/logo.png" alt="logo">
             <div class="file-name">
-                <input type="text" value="untitled" id="fileName" onkeypress="increaseWidth(this)"> 
+                <input type="text" value="untitled" id="fileName" onkeypress="increaseWidth(this)">
+            </div>
+            <div class="message" id="message">
+                <img src="assets/checkmark.png" alt="checkmark">
+                <p>File Saved.</p> 
             </div>
         </div>
         <div class="tabs-container">
-            <div class="cirlce-container new-btn" class="" id="newTab">
+            <img src="assets/delete.png" alt="delete" class="delete-btn" id="delete">
+            <div class="cirlce-container new-btn" id="newTab">
                 +
             </div>
             <div class="tabs" id="tabs">

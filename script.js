@@ -8,6 +8,7 @@ function init () {
     getFileNames();
     createTabs();
     handleTabs();
+    showDeleteBtn();
     currentFileName = fileName.value;
 }
 init();
@@ -25,7 +26,7 @@ function createTabs () {
 
 //2. Creates TabHead Node.
 function createTabHead (id, data) {
-    let button = document.createElement('button');
+    let button = document.createElement('div');
     button.id = id;
     if (id == 1) {
         button.className = 'activeTabHead';
@@ -53,6 +54,7 @@ function createEditor (id) {
 
 //4. Creates New Tab:
 document.getElementById('newTab').addEventListener('click', () => {
+    resetDeleteBtn();
     reset();
     let cnt = 0;
     for (let i = 0; i < tabs.length; i++) {
@@ -65,6 +67,7 @@ document.getElementById('newTab').addEventListener('click', () => {
 
     createTabs();
     handleTabs();
+    showDeleteBtn();
 });
 
 //5. Rename Tab:
@@ -72,8 +75,9 @@ function renameTab (fname) {
     let activeTab = document.querySelector('.active').id;
     activeTab = activeTab.split('-')[1];
     let activeTabHead = document.getElementById(activeTab);
-    if (activeTabHead.innerHTML != fname) {
-        activeTabHead.innerHTML = fname;
+    if (activeTabHead.innerText != fname) {
+        resetDeleteBtn();
+        activeTabHead.innerText = fname;
     }
     changeWidth();
 }
@@ -94,15 +98,32 @@ function handleTabs () {
 
 // 2. Callback function for handleTabs event listeners.
 function displayTabs (e) {
+    if (e.target.id == 'delete') return;
+
     let activeTab = document.querySelector('.active').id;
     document.getElementById(activeTab).classList.remove('active');
     document.getElementById("editor-" + e.target.id).classList.add('active');
-    fileName.value = e.target.innerHTML;
+    fileName.value = e.target.innerText;
     currentFileName = fileName.value;
     setActiveTabCSS();
     changeWidth();
+    showDeleteBtn();
 }
 
+// Show Delete Button
+function showDeleteBtn () {
+    let id = document.querySelector('.active').id.split('-')[1];
+    let tabHead = document.getElementById(id);
+    if (tabHead.childNodes.length > 1) return;
+
+    if (fileExist(tabHead.innerText)) return;
+
+    let deleteBtn = document.getElementById('delete');
+
+    tabHead.appendChild(deleteBtn);
+    deleteBtn.style.display = 'block';
+    deleteBtn.style.marginLeft = '20px';
+}
 // #endregion -------------------------
 
 
@@ -116,6 +137,12 @@ editor_div.addEventListener('focusout', () => {
     if (editor != '' && editor != 'Click Here to add new data') {
         localStorage.setItem(file, editor);
         currentFileName = file;
+
+        // change the file name in tabs list.
+        getFileNames();
+
+        // Show Success Message
+        showMessage();
     }
 });
 
@@ -125,15 +152,22 @@ fileName.addEventListener('focusout', () => {
     renameTab(fname);
     let editor = document.querySelector('.active').innerHTML;
     if (!fileExist(currentFileName) && fname != currentFileName && editor != '') {
-        console.log('here--1', currentFileName)
         localStorage.setItem(fname, getEditorData(currentFileName));
         localStorage.removeItem(currentFileName);
         currentFileName = fname;
+
+        showDeleteBtn();
     }
 });
 
-//3. get fileNames
+// 3. Delete
+document.getElementById('delete').addEventListener('click', () => {
+    document.getElementById('deleteModal').style.display = 'block';
+});
+
+//4. get fileNames
 function getFileNames () {
+    tabs = []
     let data = Object.entries(localStorage);
     if (data.length != 0) {
         for (const i in data) {
@@ -144,16 +178,33 @@ function getFileNames () {
     }
 }
 
-//4. get editor data
+//5. get editor data
 function getEditorData (key) {
     return localStorage.getItem(key);
 }
 
-//5. check if file exist
+//6. check if file exist
 function fileExist (fname) {
     return localStorage.getItem(fname) === null;
 }
 
+function deleteTab () {
+    // shift the delete button.
+    resetDeleteBtn();
+
+    // Delete the file
+    let tabHeadId = document.querySelector('.active').id.split('-')[1];
+    let fname = document.getElementById(tabHeadId).innerText;
+    localStorage.removeItem(fname);
+    reset();
+    init();
+
+    closeModal();
+}
+
+function closeModal () {
+    document.getElementById('deleteModal').style.display = 'none';
+}
 // #endregion --------------------
 
 
@@ -185,6 +236,15 @@ function setActiveTabCSS () {
     activeTabHead.style.borderBottom = '1px solid #fff';
     activeTabHead.style.backgroundColor = '#2C313A';
 }
+
+//3. reset delete button
+function resetDeleteBtn () {
+    let tabsContainer = document.querySelector('.tabs-container');
+    let deleteBtn = document.getElementById('delete');
+    tabsContainer.insertBefore(deleteBtn, tabsContainer.children[0]);
+    deleteBtn.style.display = 'none';
+}
+
 // #endregion --------------------
 
 
@@ -192,12 +252,10 @@ function setActiveTabCSS () {
 function increaseWidth (e) {
     if (e.offsetWidth < 600) {
         e.style.width = 200 + ((e.value.length + 1) * 8) + 'px';
-        // e.style.width = (e.value.length + 1) + 'ch';
     }
 }
 
 function changeWidth () {
-    console.log(fileName.value.length);
     if (fileName.value.length < 10) {
         fileName.style.width = 200 + 'px';
     } else if (fileName.value.length > 46) {
@@ -206,4 +264,12 @@ function changeWidth () {
         fileName.style.width = (fileName.value.length + 1) + 'ch';
     }
 }
-// #endregion
+
+function showMessage () {
+    let message = document.getElementById('message');
+    message.style.display = 'flex';
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, 900);
+}
+// #endregion   
